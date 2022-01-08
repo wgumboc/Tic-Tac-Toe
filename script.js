@@ -21,9 +21,10 @@ const playGame = (() => {
 
     const player1 = player("Player 1", "X");
     const player2 = player("Player 2", "O");
-    let turnNumber = 1;
+    let turnNumber = 0;
     let currentPlayer = player1;
     let gameOver = false;
+    let winner = null;
 
     const btn = document.querySelectorAll('.grid-item');
     const turn = document.querySelector('.turn');
@@ -45,7 +46,11 @@ const playGame = (() => {
             }
 
             if (checkWinner()) {
-                turn.textContent = "Winner!"
+                if (winner == player1) {
+                    turn.textContent = "Player 1 Wins!";
+                } else {
+                    turn.textContent = "Player 2 Wins!";
+                }
             }
         });
     }); 
@@ -65,6 +70,11 @@ const playGame = (() => {
             turn.textContent = "Player 1's turn."
         }
         turnNumber++;
+
+        if (turnNumber == 9) {
+            gameOver = true;
+            turn.textContent = "Draw!";
+        }
     }
 
     const isTileFull= (tile) => {
@@ -97,10 +107,15 @@ const playGame = (() => {
                     counterO++;
                 }
             }
-            if (counterX == 3 || counterO == 3) {
+            if (counterX == 3) {
                 gameOver = true;
+                winner = player1;
                 return true;
-            } 
+            } else if (counterO == 3) {
+                gameOver = true;
+                winner = player2;
+                return true;
+            }
         }
 
         return false;
@@ -109,9 +124,10 @@ const playGame = (() => {
 
     const replayGame = () => {
         gameBoard.boardArray = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-        turnNumber = 1;
+        turnNumber = 0;
         currentPlayer = player1;
         gameOver = false;
+        winner = null;
         turn.textContent = "Player 1's turn.";
 
         btn.forEach((button) => {
